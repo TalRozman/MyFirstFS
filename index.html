@@ -20,37 +20,39 @@
     </style>
 
 </head>
+
 <body>
-    description: <input id="desc"><br>
-    category: <input id="cat"><br>
-    price: <input id="price"><br>
-    <button onclick="addData()">Add Product</button><br>
+    user-name: <input id="uName"><br>
+    email: <input id="email"><br>
+    <button onclick="addData()">Add user</button><br>
     
+    <div id="action"></div>
     <div id="display"></div>
+
 
 
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 
     <script>
-        const MY_SERVER = "http://localhost:3000/products/"
+        const MY_SERVER = "https://jsonplaceholder.typicode.com/users/"
 
         const loadData = async() =>{
             const res = await axios.get(MY_SERVER)
-            display.innerHTML = res.data.map(product => `<h1> <button onclick="delData(${product.id})">Delete Row</button> <button onclick="updData(${product.id})">Update Row</button><br> ID: ${product.id}<br> Description: ${product.description}<br>Category: ${product.catagory}<br> Price: ${product.price}</h1><hr>`).join("")
+            display.innerHTML = res.data.map(user => `<h1> <button onclick="delData(${user.id})">${user.id}</button> <button onclick="updData(${user.id})">Update data</button><br> Name: ${user.name}<br> User Name: ${user.username}<br>Email: ${user.email}</h1><hr>`).join("")
         }
         loadData()
 
         const addData=() => {
-        axios.post(MY_SERVER,{description:desc.value, catagory:cat.value, price: price.value})
+        axios.post(MY_SERVER,{username:uName.value,email:email.value}).then((res) => action.innerHTML = `<h1>User Added</h1>`)
         }
 
         const delData=(id) =>{
-            axios.delete(MY_SERVER+id).then((res) => display.innerHTML = `<h1>product deleted</h1>`)
+            axios.delete(MY_SERVER+id).then((res) => action.innerHTML = `<h1>User deleted</h1>`)
         }
 
         const updData = async(id) =>
         {
-            await axios.put(MY_SERVER+id,{description:desc.value, catagory:cat.value, price: price.value})
+            await axios.patch(MY_SERVER+id,{username:uName.value,email:email.value}).then((res) => action.innerHTML = `<h1>User updated</h1>`)
         }
     </script>
 </body>
